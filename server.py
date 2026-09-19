@@ -4,45 +4,53 @@ import tempfile
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from faster_whisper import WhisperModel
+from groq import Groq
 
 app = FastAPI(title="Le Professeur Virelangue Backend")
 
-# Modelo tiny otimizado para CPU de baixa capacidade (Render Free Tier)
-# Executa até 4x mais rápido que o modelo base e consome menos de 400MB de RAM
-model = WhisperModel("tiny", device="cpu", compute_type="int8", cpu_threads=2)
+# Inicializa o cliente da Groq utilizando a variável de ambiente GROQ_API_KEY
+groq_api_key = os.environ.get("GROQ_API_KEY")
+client = Groq(api_key=groq_api_key) if groq_api_key else None
 
 @app.post("/transcribe")
 async def transcribe_audio(file: UploadFile = File(...)):
     if not file:
         raise HTTPException(status_code=400, detail="Arquivo de áudio não enviado.")
 
+    if not client:
+        raise HTTPException(
+            status_code=500, 
+            detail="GROQ_API_KEY não configurada no servidor. Adicione a chave nas variáveis de ambiente."
+        )
+
+    # Cria arquivo temporário preservando a extensão original (.webm, .mp4, etc.)
     suffix = os.path.splitext(file.filename)[1] or ".webm"
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temp_file:
         temp_path = temp_file.name
         shutil.copyfileobj(file.file, temp_file)
 
     try:
-        # Inferência direta (greedy search): reduz latência no Render
-        segments, _ = model.transcribe(
-            temp_path,
-            language="fr",
-            initial_prompt="maison roi ville raisin eau",
-            beam_size=1,
-            best_of=1,
-            temperature=0.0,
-            vad_filter=False,
-            without_timestamps=True
-        )
-        
-        full_transcript = " ".join([seg.text for seg in segments]).strip()
+        # Envia diretamente para a LPU da Groq (tempo médio de resposta: ~300ms)
+        with open(temp_path, "rb") as audio_file:
+            transcription = client.audio.transcriptions.create(
+                file=(os.path.basename(temp_path), audio_file.read()),
+                model="whisper-large-v3-turbo",
+                prompt="maison roi ville raisin eau",
+                response_format="json",
+                language="fr",
+                temperature=0.0
+            )
+
+        full_transcript = transcription.text.strip()
         return {"transcript": full_transcript}
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro no processamento: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Erro no processamento da Groq: {str(e)}")
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
+# Monta arquivos estáticos do jogo
 app.mount("/", StaticFiles(directory="public", html=True), name="public")
 
 @app.get("/")
