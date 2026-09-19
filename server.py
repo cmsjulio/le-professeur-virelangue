@@ -1,41 +1,50 @@
 import os
 import shutil
 import tempfile
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from faster_whisper import WhisperModel
 
-app = FastAPI()
+app = FastAPI(title="Le Professeur Virelangue Backend")
 
-# Modelo 'base' oferece um salto enorme de precisão em relação ao 'tiny'
-# Consome ~250MB de RAM e roda rápido em CPU
-model = WhisperModel("base", device="cpu", compute_type="int8")
-
-# Contexto inicial orientando o vocabulário francês esperado no jogo
-VOCABULARY_PROMPT = "Maison, roi, ville, raisin, eau. Mots prononcés clairement en français."
+# Modelo tiny otimizado para CPU de baixa capacidade (Render Free Tier)
+# Executa até 4x mais rápido que o modelo base e consome menos de 400MB de RAM
+model = WhisperModel("tiny", device="cpu", compute_type="int8", cpu_threads=2)
 
 @app.post("/transcribe")
 async def transcribe_audio(file: UploadFile = File(...)):
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_audio:
-        shutil.copyfileobj(file.file, temp_audio)
-        temp_audio_path = temp_audio.name
+    if not file:
+        raise HTTPException(status_code=400, detail="Arquivo de áudio não enviado.")
+
+    suffix = os.path.splitext(file.filename)[1] or ".webm"
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temp_file:
+        temp_path = temp_file.name
+        shutil.copyfileobj(file.file, temp_file)
 
     try:
+        # Inferência direta (greedy search): reduz latência no Render
         segments, _ = model.transcribe(
-            temp_audio_path,
+            temp_path,
             language="fr",
-            beam_size=5,
-            best_of=5,
+            initial_prompt="maison roi ville raisin eau",
+            beam_size=1,
+            best_of=1,
             temperature=0.0,
-            initial_prompt=VOCABULARY_PROMPT,
-            vad_filter=False  # Crucial para não descartar palavras monossilábicas
+            vad_filter=False,
+            without_timestamps=True
         )
-        transcript = " ".join([segment.text for segment in segments]).strip()
-        return {"transcript": transcript}
+        
+        full_transcript = " ".join([seg.text for seg in segments]).strip()
+        return {"transcript": full_transcript}
     except Exception as e:
-        return {"transcript": "", "error": str(e)}
+        raise HTTPException(status_code=500, detail=f"Erro no processamento: {str(e)}")
     finally:
-        if os.path.exists(temp_audio_path):
-            os.remove(temp_audio_path)
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
 
 app.mount("/", StaticFiles(directory="public", html=True), name="public")
+
+@app.get("/")
+async def read_index():
+    return FileResponse("public/index.html")

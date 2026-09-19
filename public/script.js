@@ -62,7 +62,7 @@ const chapters = [
     phrase: "maison",
     phraseTranslationPt: "Tradução: casa (diga em francês: maison)",
     targetClean: "maison",
-    audioSrc: "audio/chapter_1.mp3",
+    audioSrc: "audio/chapter_1.mp3?v=2",
     imgSrc: "images/le-prof-virelangue-1.png"
   },
   {
@@ -72,7 +72,7 @@ const chapters = [
     phrase: "roi",
     phraseTranslationPt: "Tradução: rei (diga em francês: roi)",
     targetClean: "roi",
-    audioSrc: "audio/chapter_2.mp3",
+    audioSrc: "audio/chapter_2.mp3?v=2",
     imgSrc: "images/le-prof-virelangue-2.png"
   },
   {
@@ -82,7 +82,7 @@ const chapters = [
     phrase: "ville",
     phraseTranslationPt: "Tradução: cidade (diga em francês: ville)",
     targetClean: "ville",
-    audioSrc: "audio/chapter_3.mp3",
+    audioSrc: "audio/chapter_3.mp3?v=2",
     imgSrc: "images/le-prof-virelangue-3.png"
   },
   {
@@ -92,7 +92,7 @@ const chapters = [
     phrase: "raisin",
     phraseTranslationPt: "Tradução: uva (diga em francês: raisin)",
     targetClean: "raisin",
-    audioSrc: "audio/chapter_4.mp3",
+    audioSrc: "audio/chapter_4.mp3?v=2",
     imgSrc: "images/le-prof-virelangue-2.png"
   },
   {
@@ -102,17 +102,17 @@ const chapters = [
     phrase: "eau",
     phraseTranslationPt: "Tradução: água (diga em francês: eau)",
     targetClean: "eau",
-    audioSrc: "audio/chapter_5.mp3",
+    audioSrc: "audio/chapter_5.mp3?v=2",
     imgSrc: "images/le-prof-virelangue-3.png"
   }
 ];
 
 const globalAudio = {
-  intro: "audio/intro.mp3",
-  victory: "audio/victory.mp3",
-  defeat: "audio/defeat.mp3",
-  correct: "audio/correct.mp3",
-  wrong: "audio/wrong.mp3"
+  intro: "audio/intro.mp3?v=2",
+  victory: "audio/victory.mp3?v=2",
+  defeat: "audio/defeat.mp3?v=2",
+  correct: "audio/correct.mp3?v=2",
+  wrong: "audio/wrong.mp3?v=2"
 };
 
 let currentAudioPlayer = new Audio();
@@ -241,11 +241,13 @@ async function toggleRecording() {
   }
 
   try {
+    // Áudio capturado nativamente a 16kHz mono (otimização direta para Whisper)
     const stream = await navigator.mediaDevices.getUserMedia({ 
       audio: {
+        channelCount: 1,
+        sampleRate: 16000,
         echoCancellation: true,
-        noiseSuppression: true,
-        channelCount: 1
+        noiseSuppression: true
       }
     });
     audioChunks = [];
