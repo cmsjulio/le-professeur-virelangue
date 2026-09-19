@@ -1,0 +1,237 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --bg-dark: #0a0708;
+  --blood-red: #8a0303;
+  --crimson-glow: #e61919;
+  --toxic-green: #39ff14;
+  --paper-pale: #e0d8c3;
+  --font-horror: 'Creepster', cursive;
+  --font-typewriter: 'Special Elite', monospace;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--paper-pale);
+  font-family: var(--font-typewriter);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Efeito CRT/Scanline */
+.crt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%),
+              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+  z-index: 99;
+}
+
+.game-container {
+  width: 100%;
+  max-width: 420px;
+  height: 100vh;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  border-bottom: 1px solid #332020;
+  padding-bottom: 8px;
+}
+
+.sanity-meter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meter-bar {
+  width: 90px;
+  height: 10px;
+  background-color: #221515;
+  border: 1px solid var(--blood-red);
+}
+
+.fill {
+  width: 100%;
+  height: 100%;
+  background-color: var(--crimson-glow);
+  transition: width 0.3s ease;
+}
+
+/* Retrato do Professor */
+.visual-panel {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.portrait {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 8px;
+  background: radial-gradient(circle, #2c0909 0%, #050202 80%);
+  border: 2px solid var(--blood-red);
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 15px rgba(230, 25, 25, 0.3);
+  animation: breathe 4s infinite alternate ease-in-out;
+}
+
+.eyes {
+  position: absolute;
+  top: 40px;
+  left: 28px;
+  width: 10px;
+  height: 10px;
+  background-color: var(--crimson-glow);
+  border-radius: 50%;
+  box-shadow: 44px 0 0 var(--crimson-glow), 0 0 8px var(--crimson-glow), 44px 0 8px var(--crimson-glow);
+}
+
+.character-title {
+  font-family: var(--font-horror);
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+  color: var(--crimson-glow);
+  text-shadow: 0 0 6px rgba(138, 3, 3, 0.8);
+}
+
+/* Área de Texto */
+.dialogue-box {
+  flex: 1;
+  background: rgba(18, 10, 10, 0.8);
+  border: 1px solid #4a1515;
+  border-radius: 4px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+}
+
+#lore-text {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #c9c0aa;
+  margin-bottom: 12px;
+}
+
+.challenge-box {
+  background: #1d0707;
+  border-left: 3px solid var(--crimson-glow);
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.challenge-label {
+  font-size: 0.7rem;
+  color: var(--crimson-glow);
+  margin-bottom: 4px;
+}
+
+#target-phrase {
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: #fff;
+  font-style: italic;
+}
+
+.feedback {
+  font-size: 0.85rem;
+  min-height: 22px;
+  font-weight: bold;
+}
+.feedback.success { color: var(--toxic-green); }
+.feedback.fail { color: var(--crimson-glow); }
+
+/* Controles */
+.controls {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.action-btn {
+  background: var(--blood-red);
+  color: #fff;
+  border: 1px solid var(--crimson-glow);
+  padding: 14px;
+  font-family: var(--font-typewriter);
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.action-btn:active, .action-btn.listening {
+  background: var(--crimson-glow);
+  transform: scale(0.98);
+}
+
+.action-btn.listening {
+  animation: pulse 1s infinite alternate;
+}
+
+.fallback-form {
+  display: flex;
+  gap: 6px;
+}
+
+.fallback-form input {
+  flex: 1;
+  background: #140d0e;
+  border: 1px solid #3d2424;
+  color: #fff;
+  padding: 8px;
+  font-family: var(--font-typewriter);
+  font-size: 0.85rem;
+  border-radius: 4px;
+}
+
+.fallback-form button {
+  background: #2b1313;
+  color: #ccc;
+  border: 1px solid #5a2626;
+  padding: 0 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@keyframes breathe {
+  0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(230,25,25,0.2)); }
+  100% { transform: scale(1.05); filter: drop-shadow(0 0 14px rgba(230,25,25,0.6)); }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 5px var(--crimson-glow); }
+  100% { box-shadow: 0 0 20px var(--crimson-glow); }
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Le Professeur Virelangue</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="crt-overlay"></div>
+  
+  <main class="game-container">
+    <header>
+      <div class="sanity-meter">
+        <span class="label">SANTÉ MENTALE:</span>
+        <div class="meter-bar"><div id="sanity-fill" class="fill"></div></div>
+      </div>
+      <div class="stage-info">Chapitre: <span id="stage-num">1</span>/3</div>
+    </header>
+
+    <section class="visual-panel">
+      <div class="portrait" id="portrait">
+        <div class="eyes"></div>
+      </div>
+      <h1 class="character-title">Professeur Virelangue</h1>
+    </section>
+
+    <section class="dialogue-box">
+      <p id="lore-text">Chargement de l'horreur...</p>
+      
+      <div class="challenge-box" id="challenge-box">
+        <div class="challenge-label">RÉPÉTEZ APRÈS MOI :</div>
+        <p id="target-phrase">« ... »</p>
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+    </section>
+
+    <section class="controls">
+      <button id="mic-btn" class="action-btn">
+        <span class="btn-icon">🎙️</span> PARLER (fr-FR)
+      </button>
+
+      <form id="fallback-form" class="fallback-form">
+        <input type="text" id="manual-input" placeholder="Ou tapez ici si pas de micro..." autocomplete="off" />
+        <button type="submit">Valider</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
