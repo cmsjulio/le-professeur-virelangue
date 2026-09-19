@@ -13,41 +13,78 @@
   <div class="crt-overlay"></div>
   
   <main class="game-container">
-    <header>
-      <div class="sanity-meter">
-        <span class="label">SANTÉ MENTALE:</span>
-        <div class="meter-bar"><div id="sanity-fill" class="fill"></div></div>
+    <!-- Écran d'accueil -->
+    <section id="start-screen" class="screen active">
+      <div class="intro-content">
+        <div class="asylum-stamp">AVIS D'ÉVASION</div>
+        <h1 class="main-title">LE PROFESSEUR<br>VIRELANGUE</h1>
+        <div class="warning-box">
+          <div class="translation-bar">
+            <button id="intro-translate-btn" class="translate-toggle-btn" type="button">
+              🌐 Traduire en PT
+            </button>
+          </div>
+          <div id="intro-text">
+            <p>Le patient n° 404 s'est enfui de l'asile Sainte-Anne dans la nuit brumeuse.</p>
+            <p>Obsédé par le folklore obscur et les pièges phonétiques, il rôde dans les ruelles sombres.</p>
+            <p class="rule-hint">💡 <em>Activez votre microphone ou préparez votre clavier. Chaque erreur détruira votre esprit.</em></p>
+          </div>
+        </div>
+        <button id="start-btn" class="action-btn glow-btn">
+          ENTREZ DANS LA VILLE
+        </button>
       </div>
-      <div class="stage-info">Chapitre: <span id="stage-num">1</span>/3</div>
-    </header>
-
-    <section class="visual-panel">
-      <div class="portrait" id="portrait">
-        <div class="eyes"></div>
-      </div>
-      <h1 class="character-title">Professeur Virelangue</h1>
     </section>
 
-    <section class="dialogue-box">
-      <p id="lore-text">Chargement de l'horreur...</p>
-      
-      <div class="challenge-box" id="challenge-box">
-        <div class="challenge-label">RÉPÉTEZ APRÈS MOI :</div>
-        <p id="target-phrase">« ... »</p>
-      </div>
+    <!-- Écran de jeu -->
+    <section id="game-screen" class="screen">
+      <header class="game-header">
+        <div class="sanity-meter">
+          <span class="label">SANTÉ :</span>
+          <div class="meter-bar"><div id="sanity-fill" class="fill"></div></div>
+        </div>
+        <div class="stage-info">Chapitre <span id="stage-num">1</span>/3</div>
+      </header>
 
-      <div class="feedback" id="feedback"></div>
-    </section>
+      <section class="visual-panel">
+        <div class="portrait" id="portrait">
+          <div class="eyes"></div>
+        </div>
+        <h2 class="character-title">Professeur Virelangue</h2>
+      </section>
 
-    <section class="controls">
-      <button id="mic-btn" class="action-btn">
-        <span class="btn-icon">🎙️</span> PARLER (fr-FR)
-      </button>
+      <section class="dialogue-box">
+        <div class="translation-bar">
+          <button id="game-translate-btn" class="translate-toggle-btn" type="button">
+            🌐 Traduire en PT
+          </button>
+        </div>
 
-      <form id="fallback-form" class="fallback-form">
-        <input type="text" id="manual-input" placeholder="Ou tapez ici si pas de micro..." autocomplete="off" />
-        <button type="submit">Valider</button>
-      </form>
+        <p id="lore-text">Chargement...</p>
+        
+        <div class="challenge-box" id="challenge-box">
+          <div class="challenge-label" id="challenge-label">RÉPÉTEZ APRÈS MOI :</div>
+          <p id="target-phrase">« ... »</p>
+          <p id="target-phrase-translation" class="phrase-translation" style="display: none;"></p>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+      </section>
+
+      <section class="controls">
+        <button id="mic-btn" class="action-btn">
+          <span class="btn-icon">🎙️</span> PARLER (fr-FR)
+        </button>
+
+        <form id="fallback-form" class="fallback-form">
+          <input type="text" id="manual-input" placeholder="Ou tapez ici..." autocomplete="off" />
+          <button type="submit">Valider</button>
+        </form>
+
+        <button id="restart-btn" class="action-btn secondary-btn" style="display: none;">
+          RECOMMENCER
+        </button>
+      </section>
     </section>
   </main>
 
