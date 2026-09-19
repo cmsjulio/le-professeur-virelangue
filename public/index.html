@@ -6,32 +6,57 @@
   <title>Le Professeur Virelangue</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Special+Elite&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="crt-overlay"></div>
+  <div class="vignette-overlay"></div>
   
   <main class="game-container">
-    <!-- Écran d'accueil -->
-    <section id="start-screen" class="screen active">
+    <!-- Écran Initial / Consentement Audio (Splash) -->
+    <section id="gate-screen" class="screen active">
+      <div class="gate-content">
+        <h1 class="gate-title">LE PROFESSEUR<br>VIRELANGUE</h1>
+        <p class="gate-subtitle">Par les étudiants du CLAC</p>
+        <button id="jouer-btn" class="action-btn glow-btn gate-btn">
+          JOUER
+        </button>
+      </div>
+    </section>
+
+    <!-- Écran d'accueil / Lore -->
+    <section id="start-screen" class="screen">
       <div class="intro-content">
-        <div class="asylum-stamp">AVIS D'ÉVASION</div>
+        <div class="antique-frame intro-portrait-wrap">
+          <img src="images/le-prof-virelangue-1.png" alt="Le Professeur Virelangue" class="portrait-img" />
+        </div>
+        <div class="asylum-stamp">MANUSCRIT INTERDIT</div>
         <h1 class="main-title">LE PROFESSEUR<br>VIRELANGUE</h1>
+        
         <div class="warning-box">
           <div class="translation-bar">
-            <button id="intro-translate-btn" class="translate-toggle-btn" type="button">
-              🌐 Traduire en PT
+            <button id="intro-translate-btn" class="flag-toggle-btn" type="button" aria-label="Changer de langue">
+              <span class="flag-icon" id="intro-flag">🇧🇷</span>
+              <span class="flag-label" id="intro-flag-label">PT</span>
             </button>
           </div>
           <div id="intro-text">
-            <p>Le patient n° 404 s'est enfui de l'asile Sainte-Anne dans la nuit brumeuse.</p>
-            <p>Obsédé par le folklore obscur et les pièges phonétiques, il rôde dans les ruelles sombres.</p>
-            <p class="rule-hint">💡 <em>Activez votre microphone ou préparez votre clavier. Chaque erreur détruira votre esprit.</em></p>
+            <p>
+              Le patient n° 404 a disparu sans laisser de trace.<br>
+              Seul indice : les verrous fracturés de la vieille bibliothèque municipale et d'étranges échos montant des étages supérieurs.<br>
+              Oseriez-vous gravir les marches pour vérifier qui hante ces combles ?
+            </p>
+            <p>
+              Mais prenez garde : le professeur est aussi fou que sourd, et ses oreilles fatiguées n'admettent que la perfection du peu qu'il parvient à saisir.<br>
+              Face à lui, seule une diction impeccable de la langue de Molière pourra vous sauver.<br>
+              Une seule hésitation ou une syllabe mal comprise scellera votre destin.
+            </p>
+            <p class="rule-hint">💡 <em>Activez votre microphone ou utilisez le clavier pour réciter chaque mot distinctement.</em></p>
           </div>
         </div>
+
         <button id="start-btn" class="action-btn glow-btn">
-          ENTREZ DANS LA VILLE
+          SUIVRE LES ÉCHOS
         </button>
       </div>
     </section>
@@ -43,27 +68,28 @@
           <span class="label">SANTÉ :</span>
           <div class="meter-bar"><div id="sanity-fill" class="fill"></div></div>
         </div>
-        <div class="stage-info">Chapitre <span id="stage-num">1</span>/3</div>
+        <div class="stage-info">Chapitre <span id="stage-num">1</span>/5</div>
       </header>
 
       <section class="visual-panel">
-        <div class="portrait" id="portrait">
-          <div class="eyes"></div>
+        <div class="antique-frame game-portrait-wrap">
+          <img id="professor-img" src="images/le-prof-virelangue-1.png" alt="Professeur Virelangue" class="portrait-img" />
         </div>
         <h2 class="character-title">Professeur Virelangue</h2>
       </section>
 
       <section class="dialogue-box">
         <div class="translation-bar">
-          <button id="game-translate-btn" class="translate-toggle-btn" type="button">
-            🌐 Traduire en PT
+          <button id="game-translate-btn" class="flag-toggle-btn" type="button" aria-label="Changer de langue">
+            <span class="flag-icon" id="game-flag">🇧🇷</span>
+            <span class="flag-label" id="game-flag-label">PT</span>
           </button>
         </div>
 
         <p id="lore-text">Chargement...</p>
         
         <div class="challenge-box" id="challenge-box">
-          <div class="challenge-label" id="challenge-label">RÉPÉTEZ APRÈS MOI :</div>
+          <div class="challenge-label" id="challenge-label">PRONONCEZ CE MOT :</div>
           <p id="target-phrase">« ... »</p>
           <p id="target-phrase-translation" class="phrase-translation" style="display: none;"></p>
         </div>
@@ -88,6 +114,6 @@
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>
